@@ -8,7 +8,7 @@ const Usuarios = () => {
 
     useEffect(() => {
         async function getUsuarios() {
-            const users = await axios.get('http://localhost:4000/users/')
+            const users = await axios.get('http://localhost:5000/users/')
             console.log(users.data)
             guardarUsuarios(users.data)
         }

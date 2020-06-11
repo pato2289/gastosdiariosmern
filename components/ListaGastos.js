@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Link from 'next/link'
 import axios from 'axios'
 
 const ListaGastos = () => {
@@ -8,7 +9,7 @@ const ListaGastos = () => {
     useEffect(() => {
 
         async function getGastos() {
-            const gastos = await axios.get('http://localhost:4000/gastos/')
+            const gastos = await axios.get('http://localhost:5000/gastos/')
             console.log(gastos.data)
             guardarGastos(gastos.data)
         }
@@ -16,8 +17,8 @@ const ListaGastos = () => {
         getGastos();
     }, [])
 
-    const deleteGasto = id => {
-        console.log('el id clickeado es: ', id)
+    const deleteGasto = () => {
+        console.log(gastos._id)
     }
 
     return (
@@ -28,7 +29,7 @@ const ListaGastos = () => {
                         <>
                             <div 
                                 className="grid grid-cols-1 w-5/6 mx-auto my-4 py-2 bg-blue-400 text-center text-white shadow-2xl shadow-outline"
-                                key={gasto.id}    
+                                key={gasto._id}    
                             >
                                 <div className="">
                                     <h1 className="text-3xl">{gasto.description}</h1>
@@ -54,16 +55,19 @@ const ListaGastos = () => {
                                 </div>
                                 <div className="grid grid-cols-2">
                                     <div className="grid-cols-1">
-                                        <a
+                                        <Link
+                                            href="/gastos/[id]" as={`/gastos/${gasto._id}`}
+                                        >
+                                            <a
                                             className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-1 px-2 rounded"
-                                            href="/gastos/[id]" as={`/gastos/${gasto.id}`}
-                                        >Editar
-                                        </a>
+                                            >Editar
+                                            </a>
+                                        </Link>
                                     </div>
                                     <div className="grid-cols-1">
                                         <button
                                             className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                                            
+                                            onClick={deleteGasto}
                                         >Eliminar
                                         </button>
                                     </div>

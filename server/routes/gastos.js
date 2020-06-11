@@ -43,7 +43,7 @@ router.route('/update/:id').post((req, res) => {
             gasto.username = req.body.username;
             gasto.description = req.body.description;
             gasto.importe = Number(req.body.importe);
-            gasto.fecha = Date.parse(req.body.date);
+            gasto.fecha = Date.parse(req.body.fecha);
 
             gasto.save()
                 .then(() => res.json('Gasto actualizado!'))

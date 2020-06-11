@@ -1,8 +1,27 @@
-import React, { useState, useEffect } from 'react'
-import Layout from '../components/Layout';
+import React, {useState, useEffect} from 'react';
+import { useRouter } from 'next/router';
 import axios from 'axios';
+import Layout from '../../components/Layout';
 
-const nuevogasto = () => {
+const EditarGasto = () => {
+
+    const router = useRouter();
+    const id = router.query.id
+    console.log('Ingresaste al id: ', id)
+
+    const [gasto, guardarGasto] = useState()
+    const [nuevoGasto, guardarNuevoGasto] = useState({
+        fecha: '', description: '', username: '', importe: ''
+    })
+
+    useEffect(() => {
+        async function obtenerGasto() {
+        const gasto = await axios.get(`http://localhost:5000/gastos/${id}`)
+        console.log(gasto.data)
+        guardarGasto(gasto.data)
+    }
+        obtenerGasto();
+    }, [])
 
     const [usuarios, guardarUsuarios] = useState([]);
 
@@ -16,20 +35,15 @@ const nuevogasto = () => {
         getUsuarios();
     }, [])
 
-    const [crearGasto, guardarCrearGasto] = useState([
-        { username: '', description: '', importe: '', fecha: ''}
-    ])
-
-    const onChange = e => {
+    function onChange(e) {
         console.log([e.target.name], e.target.value)
-        guardarCrearGasto({...crearGasto, [e.target.name]: e.target.value})
+        guardarNuevoGasto({...nuevoGasto, [e.target.name]: e.target.value})
     }
-
-    const onSubmit = e => {
+    
+    function onSubmit(e) {
         e.preventDefault();
-        console.log('Boton onSubmit Presionado!: ')
-        console.log(crearGasto)
-        axios.post('http://localhost:5000/gastos/add', crearGasto)
+        console.log('clickeas onsubmit')
+        axios.post(`http://localhost:5000/gastos/update/${id}`, nuevoGasto)
             .then(res => {
                 console.log(res);
             })
@@ -38,8 +52,11 @@ const nuevogasto = () => {
             })
     }
 
-    return (
-        <Layout> 
+    if(!gasto) return <p>cargando...</p>
+
+    return ( 
+        <>
+        <Layout>
             <form 
                 className="w-full max-w-sm p-3 md:m-auto md:py-6"
                 onSubmit={onSubmit}
@@ -54,9 +71,10 @@ const nuevogasto = () => {
                     <input 
                         className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" 
                         id="inline-full-name" 
-                        type="date" 
-                        placeholder="01/01/1900" 
+                        type="date"
                         name="fecha"
+                        value={nuevoGasto.fecha}
+                        placeholder={gasto.fecha}
                         onChange={onChange}
                     />
                     </div>
@@ -71,9 +89,10 @@ const nuevogasto = () => {
                     <input 
                         className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" 
                         id="inline-full-name" 
-                        type="text" 
-                        placeholder="Lavandina" 
+                        type="text"
                         name="description"
+                        placeholder={gasto.description}
+                        value={nuevoGasto.description}
                         onChange={onChange}
                     />
                     </div>
@@ -81,7 +100,7 @@ const nuevogasto = () => {
                 <div className="flex items-center mb-6">
                     <div className="w-1/3">
                     <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
-                        Categoria
+                        Creador
                     </label>
                     </div>
                     <div className="w-2/3">
@@ -93,8 +112,11 @@ const nuevogasto = () => {
                                 name="username"
                                 onChange={onChange}
                             >
+                                <option>{gasto.username}</option>
                                 {usuarios.map(usuario => (
+                                    <>
                                     <option value={usuario.username}>{usuario.username}</option>
+                                    </>
                                 ))}
                             </select>
                             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -113,9 +135,10 @@ const nuevogasto = () => {
                     <input 
                         className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" 
                         id="inline-full-name" 
-                        type="number" 
-                        placeholder="$999" 
+                        type="number"
                         name="importe"
+                        value={nuevoGasto.importe}
+                        placeholder={gasto.importe}
                         onChange={onChange} 
                     />
                     </div>
@@ -127,13 +150,29 @@ const nuevogasto = () => {
                         className="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" 
                         type="submit"
                     >
-                        Crear Gasto
+                        Actualizar Gasto
                     </button>
                     </div>
                 </div>
             </form>
         </Layout>
+        </>
      );
 }
  
-export default nuevogasto;
+export default EditarGasto;
+  
+    {/*
+    function handleSubmit(event) {
+      event.preventDefault();
+      async function updateArticle() {
+        try {
+          await patch(`/api/articles/${article._id}`, article);
+          props.history.push(`/articles/${article._id}`);        
+        } catch(error) {
+          console.log(error);
+        }
+      }
+      updateArticle();
+    }
+*/}
