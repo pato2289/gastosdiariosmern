@@ -17,8 +17,13 @@ const ListaGastos = () => {
         getGastos();
     }, [])
 
-    const deleteGasto = () => {
-        console.log(gastos._id)
+    const deleteGasto = id => {
+        console.log('borrando el id: ', id)
+        axios.delete('http://localhost:5000/gastos/' + id)
+            .then(() => {
+                console.log('Gasto borrado!')
+            })
+            .catch(err => ('No se pudo borrar: ', err))
     }
 
     return (
@@ -67,7 +72,7 @@ const ListaGastos = () => {
                                     <div className="grid-cols-1">
                                         <button
                                             className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                                            onClick={deleteGasto}
+                                            onClick={e => deleteGasto(gasto._id)}
                                         >Eliminar
                                         </button>
                                     </div>

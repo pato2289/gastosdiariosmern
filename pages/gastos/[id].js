@@ -6,25 +6,36 @@ import Layout from '../../components/Layout';
 const EditarGasto = () => {
 
     const router = useRouter();
-    const id = router.query.id
-    console.log('Ingresaste al id: ', id)
+    const id = router.query.id;
+    const [loading, setLoading] = useState(false)
 
     const [gasto, guardarGasto] = useState()
     const [nuevoGasto, guardarNuevoGasto] = useState({
         fecha: '', description: '', username: '', importe: ''
     })
 
+    // use effect que carga 1ero el gasto por id y luego asigna los valores de ese gasto a
+    // valores, para guardarlo en nuevoGasto y asi actualizar luego
     useEffect(() => {
         async function obtenerGasto() {
         const gasto = await axios.get(`http://localhost:5000/gastos/${id}`)
         console.log(gasto.data)
-        guardarGasto(gasto.data)
+        const valores = {
+            fecha: gasto.data.fecha,
+            description: gasto.data.description,
+            username: gasto.data.username,
+            importe: gasto.data.importe
+        }
+        guardarGasto(gasto)
+        guardarNuevoGasto(valores)
+        setLoading(true)
+        console.log('Nuevo Gasto es: ', nuevoGasto)
     }
         obtenerGasto();
-    }, [])
+    }, [loading])
 
+    // Useeffect que trae los usuarios para actualizarlos de ser requerido
     const [usuarios, guardarUsuarios] = useState([]);
-
     useEffect(() => {
         async function getUsuarios() {
             const users = await axios.get('http://localhost:5000/users/')
@@ -39,7 +50,7 @@ const EditarGasto = () => {
         console.log([e.target.name], e.target.value)
         guardarNuevoGasto({...nuevoGasto, [e.target.name]: e.target.value})
     }
-    
+
     function onSubmit(e) {
         e.preventDefault();
         console.log('clickeas onsubmit')
@@ -52,7 +63,7 @@ const EditarGasto = () => {
             })
     }
 
-    if(!gasto) return <p>cargando...</p>
+    if(!loading) return <p>cargando...</p>
 
     return ( 
         <>
@@ -74,7 +85,6 @@ const EditarGasto = () => {
                         type="date"
                         name="fecha"
                         value={nuevoGasto.fecha}
-                        placeholder={gasto.fecha}
                         onChange={onChange}
                     />
                     </div>
@@ -91,7 +101,6 @@ const EditarGasto = () => {
                         id="inline-full-name" 
                         type="text"
                         name="description"
-                        placeholder={gasto.description}
                         value={nuevoGasto.description}
                         onChange={onChange}
                     />
