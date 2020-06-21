@@ -2,10 +2,12 @@ const router = require('express').Router();
 let Gasto = require('../models/gasto.model');
 
 router.route('/').get((req, res) => {
-    Gasto.find()
+        const filterUser = req.headers.username
+        Gasto.find({username: filterUser})
         .then(gastos => res.json(gastos))
         .catch(err => res.status(400).json('Error: ', err));
 });
+
 
 router.route('/add').post((req, res) => {
     const username = req.body.username;

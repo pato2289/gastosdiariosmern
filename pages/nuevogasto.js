@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '../components/Layout';
-import axios from 'axios';
+import useAuthAxios from '../hooks/useAuthAxios';
 
 const nuevogasto = () => {
 
     const [usuarios, guardarUsuarios] = useState([]);
 
     useEffect(() => {
+
+        // Hook personalizado que verifica el token
+        const authAxios = useAuthAxios();
+
         async function getUsuarios() {
-            const users = await axios.get('http://localhost:5000/users/')
+            const users = await authAxios.get('http://localhost:5000/users/')
             console.log(users.data)
             guardarUsuarios(users.data)
         }
@@ -27,9 +31,11 @@ const nuevogasto = () => {
 
     const onSubmit = e => {
         e.preventDefault();
-        console.log('Boton onSubmit Presionado!: ')
-        console.log(crearGasto)
-        axios.post('http://localhost:5000/gastos/add', crearGasto)
+        
+        // Hook personalizado que verifica el token
+        const authAxios = useAuthAxios();
+
+        authAxios.post('http://localhost:5000/gastos/add', crearGasto)
             .then(res => {
                 console.log(res);
             })
@@ -53,7 +59,6 @@ const nuevogasto = () => {
                     <div className="w-2/3">
                     <input 
                         className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" 
-                        id="inline-full-name" 
                         type="date" 
                         placeholder="01/01/1900" 
                         name="fecha"
@@ -70,7 +75,6 @@ const nuevogasto = () => {
                     <div className="w-2/3">
                     <input 
                         className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" 
-                        id="inline-full-name" 
                         type="text" 
                         placeholder="Lavandina" 
                         name="description"
@@ -88,7 +92,6 @@ const nuevogasto = () => {
                         <div className="relative">
                             <select 
                                 className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" 
-                                id="grid-state"
                                 type="text"
                                 name="username"
                                 onChange={onChange}
@@ -112,7 +115,6 @@ const nuevogasto = () => {
                     <div className="w-2/3">
                     <input 
                         className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" 
-                        id="inline-full-name" 
                         type="number" 
                         placeholder="$999" 
                         name="importe"

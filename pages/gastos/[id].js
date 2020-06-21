@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import Layout from '../../components/Layout';
+import useAuthAxios from '../../hooks/useAuthAxios'
 
 const EditarGasto = () => {
 
+    const authAxios = useAuthAxios();
     const router = useRouter();
     const id = router.query.id;
     const [loading, setLoading] = useState(false)
@@ -17,19 +18,23 @@ const EditarGasto = () => {
     // use effect que carga 1ero el gasto por id y luego asigna los valores de ese gasto a
     // valores, para guardarlo en nuevoGasto y asi actualizar luego
     useEffect(() => {
+
+        
+
         async function obtenerGasto() {
-        const gasto = await axios.get(`http://localhost:5000/gastos/${id}`)
-        console.log(gasto.data)
-        const valores = {
-            fecha: gasto.data.fecha,
-            description: gasto.data.description,
-            username: gasto.data.username,
-            importe: gasto.data.importe
-        }
-        guardarGasto(gasto)
-        guardarNuevoGasto(valores)
-        setLoading(true)
-        console.log('Nuevo Gasto es: ', nuevoGasto)
+
+            const gasto = await authAxios.get(`http://localhost:5000/gastos/${id}`)
+            console.log(gasto.data)
+            const valores = {
+                fecha: gasto.data.fecha,
+                description: gasto.data.description,
+                username: gasto.data.username,
+                importe: gasto.data.importe
+            }
+            guardarGasto(gasto)
+            guardarNuevoGasto(valores)
+            setLoading(true)
+            console.log('Nuevo Gasto es: ', nuevoGasto)
     }
         obtenerGasto();
     }, [loading])
@@ -38,7 +43,7 @@ const EditarGasto = () => {
     const [usuarios, guardarUsuarios] = useState([]);
     useEffect(() => {
         async function getUsuarios() {
-            const users = await axios.get('http://localhost:5000/users/')
+            const users = await authAxios.get('http://localhost:5000/users/')
             console.log(users.data)
             guardarUsuarios(users.data)
         }
@@ -54,7 +59,7 @@ const EditarGasto = () => {
     function onSubmit(e) {
         e.preventDefault();
         console.log('clickeas onsubmit')
-        axios.post(`http://localhost:5000/gastos/update/${id}`, nuevoGasto)
+        authAxios.post(`http://localhost:5000/gastos/update/${id}`, nuevoGasto)
             .then(res => {
                 console.log(res);
             })
