@@ -30,10 +30,6 @@ const gastosRouter = require('./routes/gastos');
 const usersRouter = require('./routes/users');
 const Auth = require('./routes/auth');
 
-const AuthToken = require('./middlewares/AuthToken');
-
-app.use(AuthToken);
-
 app.use('/gastos', gastosRouter);
 app.use('/users', usersRouter);
 app.use('/auth', Auth);

@@ -8,7 +8,7 @@ const SignIn = () => {
     const router = useRouter()
 
     const [iniciarSesion, guardarIniciarSesion] = useState([{ 
-        username: '', password: '', role: ''
+        username: '', password: ''
     }])
 
     const onChange = e => {
@@ -22,10 +22,10 @@ const SignIn = () => {
         console.log('Apretando onSubmit!');
         axios.post('http://localhost:5000/auth/login', iniciarSesion)
             .then(res => {
-                console.log('el token es: ', res.data.token);
+                console.log('res.data es: ', res.data)
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('username', res.data.payload.username);
-                localStorage.setItem('role', res.data.payload.role)
+                localStorage.setItem('role', res.data.payload.role);
             })
             .catch(err => {
                 console.log('Error: ', err)

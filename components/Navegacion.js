@@ -17,17 +17,21 @@ const Navegacion = () => {
                         <a className="text-3xl md:text-5xl" href="/">GD</a>
                 </div>
                 {(username === null)
-                    ? <a className="ml-2" href="/auth/login">Iniciar Sesion</a>
+                    ? <ul className="flex ml-auto text-xs md:text-xl">
+                        <li className="ml-4">
+                            <a href="/nuevousuario">NUEVO USUARIO</a>
+                        </li>
+                        <li className="ml-4">
+                            <a href="/auth/login">INICIAR SESION</a>
+                        </li>
+                      </ul>
                     :  <>
                         <p className="ml-2">Hola {username}</p>
                         <ul className="flex ml-auto text-xs md:text-xl">
-                            <li className="ml-3">
-                                <a href="/nuevousuario">NUEVO USUARIO</a>
-                            </li>
-                            <li className="ml-3">
+                            <li className="ml-4">
                                 <a href="/nuevogasto">NUEVO GASTO</a>
                             </li>
-                            <li className="ml-3 mr-3">
+                            <li className="ml-4 mr-3">
                                 <a href="/usuarios">LISTA USUARIOS</a>
                             </li>
                         </ul>

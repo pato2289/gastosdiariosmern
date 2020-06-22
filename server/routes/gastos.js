@@ -1,9 +1,12 @@
+const express = require('express');
 const router = require('express').Router();
+const middleware = require('../middlewares/middleware')
 let Gasto = require('../models/gasto.model');
 
-router.route('/').get((req, res) => {
-        const filterUser = req.headers.username
-        Gasto.find({username: filterUser})
+var apiRoutes = express.Router();
+
+router.get('/', middleware.ensureAuthenticated, function(req, res){
+        Gasto.find({username: req.payload.username})
         .then(gastos => res.json(gastos))
         .catch(err => res.status(400).json('Error: ', err));
 });

@@ -7,7 +7,6 @@ function login(req, res){
     
     let username = req.body.username;
     let password = req.body.password;
-    let role = req.body.role;
 
     User.findOne({username: username})
         .then(user => {

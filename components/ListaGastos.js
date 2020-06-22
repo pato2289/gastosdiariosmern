@@ -6,13 +6,6 @@ import useAuthAxios from '../hooks/useAuthAxios';
 const ListaGastos = () => {
 
     const [gastos, guardarGastos] = useState([]);
-    const [username, guardarUsername] = useState()
-
-    useEffect(() => {
-
-        guardarUsername(localStorage.getItem('username'))    
-    
-    }, [])
 
     useEffect(() => {
 
